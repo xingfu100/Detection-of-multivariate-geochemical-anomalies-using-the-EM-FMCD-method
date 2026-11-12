@@ -1,0 +1,2 @@
+K,随机种子,AIC,BIC,log_likelihood_total,平均log_likelihood,理论自由参数数_diag,样品数,变量数,是否收敛,迭代次数,max_iter,tol,init_params,covariance_type,reg_covar,n_init,该K内AIC排序,是否该K最佳seed
+5,42,21245.291169141514,21978.262233493271,-10478.645584570757,-8.7322046538089637,144,1200,14,是,15,1500,9.9999999999999995e-07,random_from_data,diag,9.9999999999999995e-07,1,1,是

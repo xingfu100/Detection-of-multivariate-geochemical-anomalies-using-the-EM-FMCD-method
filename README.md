@@ -59,3 +59,8 @@ Both commands print `PASS` messages for successful checks and exit with a nonzer
 ## License
 
 MIT; see [LICENSE](LICENSE).
+
+## Reproducible synthetic example
+
+The supplied original programs are [1_EM&AIC.py](src/1_EM%26AIC.py), [2_RPCA.py](src/2_RPCA.py) and [3_FMCD.py](src/3_FMCD.py). See [the synthetic case](examples/synthetic_case/README.md) for a 1,200-sample demonstration, workflow commands, synthetic inputs, results and plots. The case is simulated and does not reproduce the field-study results.
+
