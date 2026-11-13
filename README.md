@@ -1,66 +1,68 @@
 # EM–FMCD geochemical anomaly analysis
 
-Code accompanying the manuscript **Detection of multivariate geochemical anomalies using the EM–FMCD method: a case study in southwestern Hunan, China**.
+Code accompanying the manuscript *Detection of multivariate geochemical anomalies using the EM–FMCD method: a case study in southwestern Hunan, China*. The workflow combines Gaussian mixture clustering, robust principal component analysis (RPCA), and fast minimum covariance determinant (FMCD) to investigate multivariate geochemical anomalies.
 
-Python scripts supporting an EM–FMCD workflow for multivariate geochemical anomaly analysis. They provide compositional preprocessing, Gaussian mixture clustering, robust principal component analysis (RPCA), and fast minimum covariance determinant (FMCD) distance estimation. The scripts are independent desktop applications with Chinese-language dialogs and outputs; source-code comments and docstrings are in English.
+## Contents
 
-## Workflow and source files
+- [Source code](src/) contains the interactive programs and supporting preprocessing tools.
+- [Synthetic example](examples/synthetic_case/) provides a 1,200-sample dataset, step-by-step instructions, intermediate data, results, and figures.
+- [Tests](tests/) contains syntax and numerical checks.
+- [Requirements](requirements.txt) lists the Python dependencies.
 
-The numbering follows the research procedure described in the manuscript:
+## Installation
 
-1. **Data preparation** — [01_preprocessing.py](src/01_preprocessing.py) cleans concentration data, replaces nonpositive and missing values and can perform CLR, ILR, log10, and standardization. For the manuscript's EM and FMCD steps, produce CLR data. The first two columns are coordinates and remaining columns contain elements. Detection limits are hard-coded for the original study: verify their units and values against your own laboratory data before use. The script does not convert concentration units.
-2. **Clustering indicators** — [02_aic_element_selection.py](src/02_aic_element_selection.py) is an auxiliary AIC-based element-combination screening tool. The manuscript also uses geological knowledge and correlation screening to choose indicators; the script does not replace those decisions. The user chooses the number of components, maximum combination size, and screening tolerance.
-3. **Population separation** — [03_em_clustering.py](src/03_em_clustering.py) fits Gaussian mixtures using EM, compares AIC across cluster counts and seeds, and outputs cluster assignments. Select the cluster count by considering AIC, cluster sizes, and geological interpretation, rather than AIC alone.
-4. **Element associations** — [04_robust_pca.py](src/04_robust_pca.py) carries out pivot ILR and MCD-based robust PCA and maps loadings back to CLR element space. Run separately for each population using strictly positive, unit-consistent concentration data corresponding to that population. Do **not** feed CLR or Z-score data into this script. Select target-related associations using loadings and geological interpretation.
-5. **Anomaly detection** — [05_fmcd.py](src/05_fmcd.py) estimates robust squared Mahalanobis distances and anomaly levels using selected, already preprocessed variables. For the manuscript workflow, use the appropriate selected CLR element columns for each population. The script does not perform CLR or other preprocessing. A whole-region run can also be used for comparison.
+Install Python with Tkinter and a graphical desktop. Clone the repository and install its dependencies:
 
-These are interactive tools, not an automatic pipeline: prepare the appropriate input table and select the variables for each stage. The repository does not include the study's original dataset, intermediate files, geological maps, or all manual geological decisions; the quick tests therefore do not reproduce the paper's numerical results. Excel sheet names, input/output labels and dialogs remain in Chinese for compatibility with the original workflow.
-
-## Installation and use
-
-Clone the repository using Git to obtain the individual source files:
-
-```text
+```bash
 git clone https://github.com/xingfu100/Detection-of-multivariate-geochemical-anomalies-using-the-EM-FMCD-method.git
 cd Detection-of-multivariate-geochemical-anomalies-using-the-EM-FMCD-method
-```
-
-The repository stores separate source files. Install Python 3 with Tkinter and a graphical desktop. From a terminal in the repository root:
-
-```text
 python -m venv .venv
 ```
 
-On Windows, activate with `.venv\Scripts\activate`; on macOS/Linux use `source .venv/bin/activate`. Then install dependencies and launch a script:
+Activate the environment with `.venv\Scripts\activate` on Windows or `source .venv/bin/activate` on macOS/Linux, then run:
 
-```text
+```bash
 python -m pip install -r requirements.txt
-python src/01_preprocessing.py
 ```
 
-Run the other numbered scripts similarly. Follow each dialog to choose an input file, worksheet where applicable, variables, parameters, and an output directory. Most stages expect the first two columns to be coordinates; review the dialog and script description before running. Input support varies between programs; `openpyxl` and `xlrd` support Excel formats where the scripts accept them. Preserve sample identifiers externally when joining cluster membership to raw concentrations and CLR data. Ensure that each cluster has sufficient observations for the chosen number of variables and review convergence, covariance rank and model diagnostics.
+## Workflow
 
-## Quick tests
+1. Prepare positive, unit-consistent concentration data and compute the centered log-ratio (CLR) transformation. [01_preprocessing.py](src/01_preprocessing.py) provides cleaning and transformations; its detection limits are specific to the original study and must be checked for other datasets.
+2. Use [1_EM&AIC.py](src/1_EM%26AIC.py) to fit Gaussian mixtures and assign samples to groups. The example uses five components and random seed 42.
+3. Use [2_RPCA.py](src/2_RPCA.py) on positive raw concentrations for each group and for the whole region. The program applies ILR and robust PCA and maps the loadings into CLR space.
+4. Use [3_FMCD.py](src/3_FMCD.py) with the selected columns from the full CLR table to calculate robust Mahalanobis distances. Run each group and the whole region separately.
 
-From the repository root, first check Python syntax:
+These programs have interactive Chinese-language dialogs. The first two columns of the input tables are coordinates; retain sample order when joining cluster assignments to concentrations and CLR data. Further details, inputs, parameters and outputs are described in the [synthetic example guide](examples/synthetic_case/README.md). The additional numbered scripts in `src` provide preprocessing and related analysis utilities.
 
-```text
+## Synthetic example
+
+The example contains 1,200 artificial samples with 39 elements and grid coordinates. It includes saved EM groups, RPCA inputs and loadings, FMCD inputs and outputs, and the figures below. The images were prepared by the authors for the synthetic case; they are not maps of the study area.
+
+![EM clustering of the synthetic samples](examples/synthetic_case/results/figure_em.jpg)
+
+![RPCA loadings for the synthetic samples](examples/synthetic_case/results/figure_rpca.jpg)
+
+![FMCD anomalies for the synthetic samples](examples/synthetic_case/results/figure_anomalies.jpg)
+
+For the RPCA and FMCD figures, panels (a)–(e) show clusters 1–5 and panel (f) shows the whole region. See the [example guide](examples/synthetic_case/README.md) to run the calculations and inspect the individual tables.
+
+## Tests
+
+From the repository root, run:
+
+```bash
 python tests/quick_test.py
-```
-
-After installing the dependencies, run synthetic-data checks:
-
-```text
 python tests/numerical_test.py
 ```
 
-Both commands print `PASS` messages for successful checks and exit with a nonzero status if a check fails. The numerical test uses generated synthetic data and checks selected CLR and ILR properties, mixture-model quantities, Mahalanobis distance, element-combination AIC, robust PCA, and FMCD. It does not test all parameter choices, GUI interactions, full workflows or reproduce manuscript results. These checks were run on Windows with Python 3.14.5, NumPy 2.5.4, pandas 3.1.1, SciPy 1.18.1, scikit-learn 1.9.1, Matplotlib 3.11.2 and openpyxl 3.1.5.
+The first command checks syntax; the second checks numerical operations using synthetic data. Both print `PASS` when successful. They do not reproduce the manuscript's results or test every graphical interface operation.
+
+## Data availability
+
+The regional stream sediment geochemical data used in this study are not publicly available because the authors do not have permission to redistribute the original dataset.
+
+The synthetic dataset is included to demonstrate the workflow; it does not reproduce the original study data or results.
 
 ## License
 
-MIT; see [LICENSE](LICENSE).
-
-## Reproducible synthetic example
-
-The supplied original programs are [1_EM&AIC.py](src/1_EM%26AIC.py), [2_RPCA.py](src/2_RPCA.py) and [3_FMCD.py](src/3_FMCD.py). See [the synthetic case](examples/synthetic_case/README.md) for a 1,200-sample demonstration, workflow commands, synthetic inputs, results and plots. The case is simulated and does not reproduce the field-study results.
-
+The code is distributed under the [MIT License](LICENSE).

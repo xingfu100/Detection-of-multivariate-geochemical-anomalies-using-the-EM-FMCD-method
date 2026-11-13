@@ -23,7 +23,7 @@ Each table is an individual CSV file; RPCA inputs are also provided as Excel wor
 2. `03_em/input_clr.csv`: select the 14 indicated CLR columns from the full CLR table. Fit a Gaussian mixture with five components and seed 42 using `src/1_EM&AIC.py`; assignments are in `03_em/assignments.csv` and model trials in `trials.csv`. Preserve the row order when joining labels back to both raw and CLR tables.
 3. `04_rpca/regional/input_raw.xlsx` and `04_rpca/cluster_01` through `cluster_05/input_raw.xlsx`: use the raw positive concentrations of the entire area or of the corresponding EM cluster with `src/2_RPCA.py`; the program applies its pivot ILR, fits MCD robust PCA with support fraction 0.5 and seed 42, and maps loadings back to CLR space. ILR basis, transformed data, scores, explained variance, loadings and the element-selection table are saved beside each input.
 4. `05_fmcd/regional/input_clr.csv` and the five cluster-specific files: these use the selected element columns **from the full 39-element CLR**, subset to the corresponding rows. Run `src/3_FMCD.py` with seed 42. Per-model files provide the robust center and covariance, squared Mahalanobis distance, normalized index and anomaly level. The threshold uses the chi-square 0.975 quantile with degrees of freedom equal to the number of selected elements; index levels use 1, 1.5 and 2 as cut points.
-5. `results/sample_comparison.csv`, `model_summary.csv` and `detection_comparison.csv` combine results. The figure scripts produce EM, loading and anomaly figures. The separate `examples/synthetic_ground_truth.csv` records the deliberately imposed simulation labels and is used only to score the synthetic scenario.
+5. `results/sample_comparison.csv`, `model_summary.csv` and `detection_comparison.csv` combine results. The published figures in `results/*.jpg` were prepared by the authors. The optional plotting script generates separate PNG figures from the tabular results; these are alternative computer-generated visualizations. The separate `examples/synthetic_ground_truth.csv` records the deliberately imposed simulation labels and is used only to score the synthetic scenario.
 
 The example's selection rule is implemented in `select()` in `examples/synthetic_workflow.py`: it uses PC1–PC2 directions and lengths relative to Pb to propose three to six elements. Cluster 5 uses a manual association of Pb, Be, Bi, V and Mo; the regional model uses Pb, Sn, Y, Cu and Zn. It is an example rule; geological interpretation and manual selection may differ. The whole-region and cluster-specific associations can differ, so the FMCD comparison is not a controlled estimate of the isolated effect of clustering. No result from this synthetic example proves superiority on field data.
 
@@ -31,4 +31,20 @@ The interactive scripts provide Chinese dialogs and may export more intermediate
 
 ## Study data and license
 
-The original study dataset and true coordinates are not included. The synthetic example tests the workflow but cannot reproduce the manuscript's original numerical results. The authors should supply the actual data availability and access conditions in the manuscript when known. The project is distributed under the MIT license; see the root repository LICENSE.
+The original study dataset and true coordinates are not included. The synthetic example tests the workflow but cannot reproduce the manuscript's original numerical results. The regional stream sediment geochemical data used in this study are not publicly available because the authors do not have permission to redistribute the original dataset. The project is distributed under the MIT license; see the root repository LICENSE.
+
+## Example figures
+
+The following figures were prepared by the authors for the synthetic example. Panels (a)–(e) show the five clusters; panel (f), where present, shows the regional analysis. Axes use artificial grid coordinates. The figures are manually prepared illustrations; use the saved input and result tables to reproduce the numerical analysis.
+
+### EM clustering
+
+![EM clustering](results/figure_em.jpg)
+
+### Robust PCA loadings
+
+![Robust PCA loadings](results/figure_rpca.jpg)
+
+### FMCD anomalies
+
+![FMCD anomalies](results/figure_anomalies.jpg)
