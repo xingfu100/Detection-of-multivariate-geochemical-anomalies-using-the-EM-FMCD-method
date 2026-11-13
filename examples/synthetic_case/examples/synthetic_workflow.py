@@ -43,6 +43,10 @@ def run(out):
     for label in list(range(5))+['regional']:
         mask=labels==label if label!='regional' else np.ones(len(df),dtype=bool)
         pca=rpca.运行ILR_MCD_RPCA(raw[mask],cols,.5,42);selected,m,cos=select(pca,cols)
+        if label == 4:
+            selected = ['Pb', 'Be', 'Bi', 'V', 'Mo']
+        elif label == 'regional':
+            selected = ['Pb', 'Sn', 'Y', 'Cu', 'Zn']
         name='regional' if label=='regional' else f'cluster_{label+1:02d}'
         pdir=stages/'04_rpca'/name; fdir=stages/'05_fmcd'/name
         save(df.loc[mask].reset_index(drop=True),pdir/'input_raw.csv')
