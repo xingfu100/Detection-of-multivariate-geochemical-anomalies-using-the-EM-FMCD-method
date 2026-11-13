@@ -35,7 +35,7 @@ The original study dataset and true coordinates are not included. The synthetic 
 
 ## Example figures
 
-The following figures were prepared by the authors for the synthetic example. Panels (a)–(e) show the five clusters; panel (f), where present, shows the regional analysis. Axes use artificial grid coordinates. The figures are manually prepared illustrations; use the saved input and result tables to reproduce the numerical analysis.
+The following figures were prepared by the authors for the synthetic example. Panels (a)–(e) show the five clusters; panel (f), where present, shows the regional analysis. Axes use artificial grid coordinates. The figures are manually prepared illustrations; the displayed vectors are a subset, and the regional RPCA panel does not show Sn even though Sn is included in the regional FMCD input. Use the saved input and result tables to reproduce the numerical analysis.
 
 ### EM clustering
 
