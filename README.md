@@ -44,7 +44,7 @@ The example contains 1,200 artificial samples with 39 elements and grid coordina
 
 ![FMCD anomalies for the synthetic samples](examples/synthetic_case/results/figure_anomalies.jpg)
 
-For the RPCA and FMCD figures, panels (a)–(e) show clusters 1–5 and panel (f) shows the whole region. See the [example guide](examples/synthetic_case/README.md) to run the calculations and inspect the individual tables.
+For the RPCA and FMCD figures, panels (a)–(e) show clusters 1–5 and panel (f) shows the whole region. The displayed loading vectors are a subset chosen for illustration; they do not necessarily match the FMCD input variables. For example, Sn is included in the regional FMCD input but is not shown in panel (f). See the [example guide](examples/synthetic_case/README.md) to run the calculations and inspect the individual tables.
 
 ## Tests
 
